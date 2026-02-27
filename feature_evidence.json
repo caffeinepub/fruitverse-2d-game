@@ -1,0 +1,26 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-serve-a-plain-text-app-ads-txt-file-at-the-root-url-path-app-ads-txt-of-the-application-i-e-accessible-at-https-fruitverse-kaz-caffeine-xyz-app-ads-txt-the-file-must-contain-exactly-the-following-line-google-com-pub-7936595519986908-direct-f08c47fec0942fa0",
+      "featureTitle": "Serve a plain-text `app-ads.txt` file at the root URL path `/app-ads.txt` of the application (i.e., accessible at `https://fruitverse-kaz.caffeine.xyz/app-ads.txt`). The file must contain exactly the following line: `google.com, pub-7936595519986908, DIRECT, f08c47fec0942fa0`",
+      "files": [
+        "frontend/public/app-ads.txt"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "authorization@4.0.0",
+        "http-outcalls@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

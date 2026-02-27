@@ -1,0 +1,25 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Add app-ads.txt endpoint for Google AdMob verification",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Serve a plain-text app-ads.txt file at the root URL path /app-ads.txt containing the Google AdMob publisher verification line",
+      "acceptanceCriteria": [
+        "A file named `app-ads.txt` is placed in `frontend/public/` so it is served at the root URL path `/app-ads.txt`.",
+        "The file content is exactly: `google.com, pub-7936595519986908, DIRECT, f08c47fec0942fa0` with no extra whitespace or encoding issues.",
+        "Navigating to `https://fruitverse-kaz.caffeine.xyz/app-ads.txt` returns the correct plain-text content with HTTP 200.",
+        "The file is served with a plain-text MIME type (`text/plain`).",
+        "No other pages or routes are affected by this change."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/app-ads.txt",
+          "operation": "create",
+          "description": "Create app-ads.txt file in frontend/public/ directory containing exactly one line: 'google.com, pub-7936595519986908, DIRECT, f08c47fec0942fa0' (without quotes). This file will be served as a static asset at the root URL path /app-ads.txt for Google AdMob publisher verification. Ensure the file has no extra whitespace, line breaks, or encoding issues that could interfere with AdMob verification."
+        }
+      ]
+    }
+  ]
+}

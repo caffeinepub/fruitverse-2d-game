@@ -1,0 +1,44 @@
+{
+  "kind": "build_request",
+  "title": "Add app-ads.txt endpoint for Google AdMob verification",
+  "projectName": "FruitVerse",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Serve a plain-text `app-ads.txt` file at the root URL path `/app-ads.txt` of the application (i.e., accessible at `https://fruitverse-kaz.caffeine.xyz/app-ads.txt`). The file must contain exactly the following line: `google.com, pub-7936595519986908, DIRECT, f08c47fec0942fa0`",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "benim için app-ads.txt uzantısını hazırla normal uygulamanın URL sinin uzantısına",
+          "google.com, pub-7936595519986908, DIRECT, f08c47fec0942fa0"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A file named `app-ads.txt` is placed in `frontend/public/` so it is served at the root URL path `/app-ads.txt`.",
+        "The file content is exactly: `google.com, pub-7936595519986908, DIRECT, f08c47fec0942fa0` with no extra whitespace or encoding issues.",
+        "Navigating to `https://fruitverse-kaz.caffeine.xyz/app-ads.txt` returns the correct plain-text content with HTTP 200.",
+        "The file is served with a plain-text MIME type (`text/plain`).",
+        "No other pages or routes are affected by this change."
+      ]
+    }
+  ],
+  "constraints": [
+    "The app-ads.txt file must be served as a static public asset at the exact path /app-ads.txt — do not route it through the backend canister.",
+    "The AdMob publisher ID pub-7936595519986908 must not be altered.",
+    "The authorization tag f08c47fec0942fa0 must not be altered."
+  ],
+  "nonGoals": [
+    "Do not modify any backend Motoko logic.",
+    "Do not change any existing frontend pages or components.",
+    "Do not add any UI elements related to the app-ads.txt file.",
+    "Do not add additional ad network entries beyond the single Google AdMob line."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

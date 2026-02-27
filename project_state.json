@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "FruitMatch Android oyunu projesi. Google AdMob doğrulama sorunu için app-ads.txt endpoint'i uygulamaya ekleniyor.",
+  "architectural_notes": [
+    "app-ads.txt must be served at https://fruitverse-kaz.caffeine.xyz/app-ads.txt with AdMob publisher ID pub-7936595519986908"
+  ],
+  "known_issues": [
+    "Google AdMob cannot verify FruitMatch (Android) app due to missing/invalid app-ads.txt file"
+  ],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-serve-a-plain-text-app-ads-txt-file-at-the-root-url-path-app-ads-txt-of-the-application-i-e-accessible-at-https-fruitverse-kaz-caffeine-xyz-app-ads-txt-the-file-must-contain-exactly-the-following-line-google-com-pub-7936595519986908-direct-f08c47fec0942fa0",
+      "title": "Serve a plain-text `app-ads.txt` file at the root URL path `/app-ads.txt` of the application (i.e., accessible at `https://fruitverse-kaz.caffeine.xyz/app-ads.txt`). The file must contain exactly the following line: `google.com, pub-7936595519986908, DIRECT, f08c47fec0942fa0`",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Add app-ads.txt endpoint at the app's root URL for Google AdMob verification",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "2d",
+  "projectName": "FruitMatch",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

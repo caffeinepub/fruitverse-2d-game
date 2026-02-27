@@ -1,0 +1,40 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-27T21:46:18.266Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 1,
+    "implemented": 1,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Serve a plain-text `app-ads.txt` file at the root URL path `/app-ads.txt` of the application (i.e., accessible at `https://fruitverse-kaz.caffeine.xyz/app-ads.txt`). The file must contain exactly the following line: `google.com, pub-7936595519986908, DIRECT, f08c47fec0942fa0`",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/public/app-ads.txt"
+        ],
+        "matchedFiles": [
+          "frontend/public/app-ads.txt"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "build-template/README.md",
+    "caffeine.lock.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/public/app-ads.txt",
+    "frontend/src/config.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}
