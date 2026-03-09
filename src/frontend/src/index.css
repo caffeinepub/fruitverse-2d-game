@@ -1,0 +1,215 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: oklch(100% 0 0);
+    --foreground: oklch(15% 0 0);
+    --card: oklch(100% 0 0);
+    --card-foreground: oklch(15% 0 0);
+    --popover: oklch(100% 0 0);
+    --popover-foreground: oklch(15% 0 0);
+    --primary: oklch(55% 0.18 25);
+    --primary-foreground: oklch(100% 0 0);
+    --secondary: oklch(95% 0.01 25);
+    --secondary-foreground: oklch(15% 0 0);
+    --muted: oklch(95% 0.01 25);
+    --muted-foreground: oklch(45% 0.01 25);
+    --accent: oklch(95% 0.01 25);
+    --accent-foreground: oklch(15% 0 0);
+    --destructive: oklch(55% 0.22 25);
+    --destructive-foreground: oklch(100% 0 0);
+    --border: oklch(90% 0.01 25);
+    --input: oklch(90% 0.01 25);
+    --ring: oklch(55% 0.18 25);
+    --radius: 0.5rem;
+    --chart-1: oklch(60% 0.15 25);
+    --chart-2: oklch(70% 0.15 150);
+    --chart-3: oklch(55% 0.15 60);
+    --chart-4: oklch(65% 0.15 280);
+    --chart-5: oklch(60% 0.15 340);
+  }
+
+  .dark {
+    --background: oklch(15% 0.01 25);
+    --foreground: oklch(98% 0 0);
+    --card: oklch(15% 0.01 25);
+    --card-foreground: oklch(98% 0 0);
+    --popover: oklch(15% 0.01 25);
+    --popover-foreground: oklch(98% 0 0);
+    --primary: oklch(65% 0.18 25);
+    --primary-foreground: oklch(15% 0 0);
+    --secondary: oklch(25% 0.01 25);
+    --secondary-foreground: oklch(98% 0 0);
+    --muted: oklch(25% 0.01 25);
+    --muted-foreground: oklch(65% 0.01 25);
+    --accent: oklch(25% 0.01 25);
+    --accent-foreground: oklch(98% 0 0);
+    --destructive: oklch(55% 0.22 25);
+    --destructive-foreground: oklch(98% 0 0);
+    --border: oklch(25% 0.01 25);
+    --input: oklch(25% 0.01 25);
+    --ring: oklch(65% 0.18 25);
+    --chart-1: oklch(70% 0.15 25);
+    --chart-2: oklch(75% 0.15 150);
+    --chart-3: oklch(65% 0.15 60);
+    --chart-4: oklch(70% 0.15 280);
+    --chart-5: oklch(70% 0.15 340);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Game Page Styles */
+.game-page-container {
+  @apply relative min-h-screen overflow-hidden;
+}
+
+.game-content-wrapper {
+  @apply flex flex-col h-screen;
+}
+
+.game-header {
+  @apply w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-md z-20;
+  @apply border-b border-border;
+}
+
+.game-header-content {
+  @apply container mx-auto px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between gap-2;
+}
+
+.game-title {
+  @apply text-base sm:text-lg md:text-xl font-bold text-primary;
+}
+
+.game-subtitle {
+  @apply text-xs sm:text-sm text-muted-foreground;
+}
+
+.game-main-content {
+  @apply flex-1 flex items-center justify-center p-2 sm:p-4 overflow-hidden;
+}
+
+.game-canvas-wrapper {
+  @apply w-full h-full flex items-center justify-center;
+}
+
+/* Game Card Styles */
+.game-card {
+  @apply w-full max-w-[min(95vw,450px)] bg-white/20 dark:bg-gray-900/20 backdrop-blur-sm border-2 border-white/30 shadow-2xl;
+}
+
+.game-card-content {
+  @apply p-2 sm:p-4 space-y-2 sm:space-y-3;
+}
+
+.game-start-screen {
+  @apply flex flex-col items-center justify-center space-y-4 sm:space-y-6 py-8 sm:py-12;
+}
+
+.game-instructions {
+  @apply text-sm sm:text-base md:text-lg text-center text-foreground opacity-90 max-w-xs;
+}
+
+.game-start-button {
+  @apply text-sm sm:text-base px-6 sm:px-8 py-2 sm:py-3;
+}
+
+/* Game Controls */
+.game-controls-row {
+  @apply flex items-center justify-between gap-1 sm:gap-2 mb-2;
+}
+
+.game-score {
+  @apply text-sm sm:text-base md:text-lg font-bold text-primary;
+}
+
+.game-boosters-inline {
+  @apply flex items-center gap-1;
+}
+
+.booster-inline-btn {
+  @apply relative flex flex-col items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-lg transition-all duration-200;
+  @apply bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-2 border-primary/30;
+  @apply hover:bg-primary/10 hover:border-primary hover:scale-105;
+  @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100;
+}
+
+.booster-inline-active {
+  @apply bg-primary/20 border-primary ring-2 ring-primary/50;
+}
+
+.booster-inline-disabled {
+  @apply bg-gray-200/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600;
+}
+
+.booster-inline-icon {
+  @apply text-base sm:text-lg;
+}
+
+.booster-inline-count {
+  @apply absolute -top-1 -right-1 text-[10px] font-bold bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center;
+}
+
+.game-controls-right {
+  @apply flex items-center gap-1;
+}
+
+.sound-toggle-btn {
+  @apply p-1.5 sm:p-2;
+}
+
+.game-reset-btn {
+  @apply text-xs px-2 sm:px-3 py-1.5 sm:py-2;
+}
+
+/* Bomb Mode Indicator */
+.bomb-mode-indicator {
+  @apply text-center text-xs sm:text-sm font-semibold text-red-600 dark:text-red-400 bg-red-100/80 dark:bg-red-900/30 py-1 px-2 rounded;
+}
+
+/* Game Canvas */
+.game-canvas-container {
+  @apply flex items-center justify-center w-full;
+}
+
+.game-canvas {
+  @apply border-2 border-primary/30 rounded-lg shadow-lg bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm;
+}
+
+/* Next Fruit Indicator */
+.next-fruit-indicator {
+  @apply text-center text-xs sm:text-sm font-medium text-foreground opacity-80;
+}
+
+/* Mode Selection Styles */
+.mode-selection-container {
+  @apply relative min-h-screen overflow-hidden;
+}
+
+.mode-card {
+  @apply transition-all duration-300 hover:shadow-2xl;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .game-header-content {
+    @apply px-1.5 py-2;
+  }
+
+  .game-card {
+    @apply max-w-[98vw];
+  }
+
+  .game-card-content {
+    @apply p-2 space-y-2;
+  }
+}
