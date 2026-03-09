@@ -184,6 +184,10 @@ export default function FruitMergeGame({
   // Next fruit display state (mirrors the ref for rendering)
   const [nextFruitDisplay, setNextFruitDisplay] = useState(0);
 
+  // Canvas flash state for alignment end signal
+  const [canvasFlash, setCanvasFlash] = useState(false);
+  const prevAlignmentGuideRef = useRef(false);
+
   // How to play dialog
   const [showHowToPlay, setShowHowToPlay] = useState(false);
 
@@ -380,6 +384,16 @@ export default function FruitMergeGame({
       onBoosterUsed();
     }
   }, [activeBooster, gameStarted, gameOver, onBoosterUsed, playSoundEffect]);
+
+  // Alignment end signal - toast + canvas flash
+  useEffect(() => {
+    if (prevAlignmentGuideRef.current && !showAlignmentGuide && gameStarted) {
+      toast("⏰ Rehber süresi doldu!");
+      setCanvasFlash(true);
+      setTimeout(() => setCanvasFlash(false), 600);
+    }
+    prevAlignmentGuideRef.current = showAlignmentGuide;
+  }, [showAlignmentGuide, gameStarted]);
 
   // Stop all sounds when component unmounts or game exits
   useEffect(() => {
@@ -809,19 +823,22 @@ export default function FruitMergeGame({
     puzzleLevel,
   ]);
 
-  // Submit score on game over
+  // Submit score on game over (with offline queue)
   // biome-ignore lint/correctness/useExhaustiveDependencies: intentional - only trigger on gameOver change
   useEffect(() => {
     if (gameOver && score > 0) {
-      submitScoreMutation.mutate(
-        { username, score },
-        {
-          onError: (error) => {
-            console.error("Failed to submit score:", error);
-            toast.error(t("error.actorNotInitialized"));
-          },
-        },
-      );
+      submitScoreMutation.mutateAsync({ username, score }).catch(() => {
+        try {
+          const pending = JSON.parse(
+            localStorage.getItem("pendingScores") || "[]",
+          );
+          pending.push({ username, score, timestamp: Date.now() });
+          localStorage.setItem("pendingScores", JSON.stringify(pending));
+          toast(t("game.scoreSavedOffline") || "Skor çevrimdışı kaydedildi.");
+        } catch {
+          // ignore storage errors
+        }
+      });
     }
   }, [gameOver]);
 
@@ -1069,18 +1086,47 @@ export default function FruitMergeGame({
             </div>
           ) : (
             <>
-              {/* Puzzle objective panel */}
+              {/* Puzzle objective panel - prominent */}
               {gameMode === "puzzle" && currentPuzzle && !gameOver && (
-                <div className="flex items-center justify-between px-2 py-1 mb-1 rounded-lg bg-amber-500/20 border border-amber-400/40 text-xs font-bold">
-                  <span className="text-amber-700 dark:text-amber-300">
-                    {t("puzzle.objective")}: {currentPuzzle.label}
-                  </span>
-                  <span className="text-amber-700 dark:text-amber-300">
-                    ({puzzleMergeCount}/{currentPuzzle.targetCount})
-                  </span>
-                  <span className="text-amber-600 dark:text-amber-400">
-                    {t("puzzle.level", { level: String(puzzleLevel + 1) })}
-                  </span>
+                <div
+                  className="w-full mb-2 rounded-xl overflow-hidden border-2 border-amber-400"
+                  style={{
+                    background: "linear-gradient(90deg, #f59e0b, #fbbf24)",
+                  }}
+                >
+                  <div className="flex items-center justify-between px-3 py-1.5">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="text-lg font-black"
+                        style={{
+                          animation:
+                            puzzleMergeCount > 0
+                              ? "pulse 0.4s ease-in-out"
+                              : undefined,
+                        }}
+                      >
+                        {currentPuzzle.label.split(" ")[0]}
+                      </span>
+                      <span className="text-white font-bold text-sm drop-shadow">
+                        {t("puzzle.objective")}: {currentPuzzle.label}
+                      </span>
+                    </div>
+                    <span className="text-white font-black text-sm drop-shadow">
+                      {t("puzzle.level", { level: String(puzzleLevel + 1) })} ·{" "}
+                      {puzzleMergeCount}/{currentPuzzle.targetCount}
+                    </span>
+                  </div>
+                  {/* Progress bar */}
+                  <div className="w-full h-2 bg-amber-200/50">
+                    <div
+                      className="h-full transition-all duration-300"
+                      style={{
+                        width: `${Math.min((puzzleMergeCount / currentPuzzle.targetCount) * 100, 100)}%`,
+                        background: "linear-gradient(90deg, #fff, #fef3c7)",
+                        boxShadow: "0 0 8px rgba(255,255,255,0.8)",
+                      }}
+                    />
+                  </div>
                 </div>
               )}
 
@@ -1155,9 +1201,11 @@ export default function FruitMergeGame({
                           disabled={isActive}
                           className={`booster-inline-btn ${isActive ? "booster-inline-active" : ""} ${!canUse ? "booster-inline-disabled" : ""}`}
                           title={
-                            canUse
-                              ? `${booster.icon} ${booster.count}`
-                              : t("booster.watchAd")
+                            booster.type === "alignment"
+                              ? "10 saniye boyunca dikey bir düşme rehberi gösterir"
+                              : canUse
+                                ? `${booster.icon} ${booster.count}`
+                                : t("booster.watchAd")
                           }
                           data-ocid="game.toggle"
                         >
@@ -1243,12 +1291,61 @@ export default function FruitMergeGame({
                 </div>
               )}
 
-              {/* Endless mode starfield / space wrapper */}
+              {/* Game canvas wrapper - speed / endless mode styling */}
               <div
                 ref={containerRef}
-                className={`game-canvas-container${gameMode === "endless" ? " endless-mode-active" : ""}`}
-                style={{ position: "relative" }}
+                className={`game-canvas-container${gameMode === "endless" ? " endless-mode-active" : ""}${gameMode === "speed" ? " speed-mode-active" : ""}`}
+                style={{
+                  position: "relative",
+                  boxShadow:
+                    gameMode === "speed"
+                      ? canvasFlash
+                        ? "0 0 0 4px #fff, 0 0 28px 8px #ef4444"
+                        : "0 0 20px 4px rgba(251,63,0,0.7)"
+                      : canvasFlash
+                        ? "0 0 0 3px #fff, 0 0 20px 6px rgba(0,200,255,0.8)"
+                        : undefined,
+                  transition: "box-shadow 0.15s ease",
+                }}
               >
+                {/* Speed mode vignette overlay */}
+                {gameMode === "speed" && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      pointerEvents: "none",
+                      background:
+                        "radial-gradient(ellipse at center, transparent 55%, rgba(220,30,0,0.35) 100%)",
+                      borderRadius: "inherit",
+                      zIndex: 2,
+                      animation: "speedPulse 1s ease-in-out infinite",
+                    }}
+                  />
+                )}
+                {/* Speed mode badge */}
+                {gameMode === "speed" && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 6,
+                      right: 6,
+                      zIndex: 12,
+                      pointerEvents: "none",
+                      padding: "3px 10px",
+                      borderRadius: 999,
+                      background: "linear-gradient(90deg, #dc2626, #f97316)",
+                      color: "#fff",
+                      fontWeight: 900,
+                      fontSize: 11,
+                      letterSpacing: "0.08em",
+                      boxShadow: "0 0 12px rgba(239,68,68,0.9)",
+                      animation: "speedPulse 0.8s ease-in-out infinite",
+                    }}
+                  >
+                    ⚡ SPEED MODE
+                  </div>
+                )}
                 {gameMode === "endless" && (
                   <div
                     style={{

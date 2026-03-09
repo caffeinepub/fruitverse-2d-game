@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { useSubmitScore } from "@/hooks/useQueries";
 import AdminPanel from "@/pages/AdminPanel";
 import GamePage from "@/pages/GamePage";
 import LoginPage from "@/pages/LoginPage";
@@ -26,6 +27,35 @@ function App() {
   );
 
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const submitScoreMutation = useSubmitScore();
+
+  // Retry pending (offline-queued) scores on app load
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional - run once on mount only
+  useEffect(() => {
+    const pending: Array<{
+      username: string;
+      score: number;
+      timestamp: number;
+    }> = JSON.parse(localStorage.getItem("pendingScores") || "[]");
+    if (pending.length === 0) return;
+    const retryAll = async () => {
+      const remaining: typeof pending = [];
+      for (const item of pending) {
+        try {
+          await submitScoreMutation.mutateAsync({
+            username: item.username,
+            score: item.score,
+          });
+        } catch {
+          remaining.push(item);
+        }
+      }
+      if (remaining.length < pending.length) {
+        localStorage.setItem("pendingScores", JSON.stringify(remaining));
+      }
+    };
+    retryAll();
+  }, []);
 
   // Idle session timeout (30 min)
   useEffect(() => {

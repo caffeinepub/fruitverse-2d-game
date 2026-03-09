@@ -213,3 +213,28 @@
     @apply p-2 space-y-2;
   }
 }
+
+/* Speed mode animations */
+@keyframes speedPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.speed-mode-active {
+  animation: speedBorderGlow 1s ease-in-out infinite;
+}
+
+@keyframes speedBorderGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 18px 4px rgba(239, 68, 68, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 32px 8px rgba(251, 100, 0, 0.9);
+  }
+}
