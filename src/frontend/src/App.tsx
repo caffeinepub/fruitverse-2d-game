@@ -1,3 +1,4 @@
+import BackendStatusBanner from "@/components/BackendStatusBanner";
 import { Toaster } from "@/components/ui/sonner";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
@@ -128,6 +129,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <ThemeProvider>
+          <BackendStatusBanner />
           {currentRoute === "admin" && <AdminPanel onExit={handleExitAdmin} />}
           {currentRoute === "game" && currentUser && (
             <GamePage username={currentUser} onLogout={handleLogout} />

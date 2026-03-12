@@ -262,9 +262,9 @@ export function useBackendHealthCheck() {
       }
     },
     enabled: !!actor && !isFetching,
-    refetchInterval: 30000,
-    retry: 3,
-    retryDelay: 5000,
+    refetchInterval: 10000,
+    retry: 5,
+    retryDelay: (attempt) => Math.min(2000 * 2 ** attempt, 60000),
   });
 }
 

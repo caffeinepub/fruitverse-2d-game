@@ -1060,6 +1060,18 @@ actor {
     };
   };
 
+  // Heartbeat: keeps canister alive by running periodically
+  var heartbeatCount : Nat = 0;
+
+  system func heartbeat() : async () {
+    heartbeatCount += 1;
+  };
+
+  // Public: get heartbeat count (used to verify canister is alive)
+  public query func getHeartbeatCount() : async Nat {
+    heartbeatCount;
+  };
+
   // User-owned account deletion
   public shared ({ caller }) func deleteOwnAccount(username : Text) : async () {
     validateUserSession(caller, username);
